@@ -9,58 +9,20 @@ public class FileCabinet implements Cabinet{
 
     @Override
     public Optional<Folder> findFolderByName(String name) {
-        return findFolderNaming(folders, name);
-    }
-
-    private Optional<Folder> findFolderNaming(List<Folder> folders, String name){
-        for (Folder folder : folders) {
-            if (folder.getName().equals(name)) {
-                return Optional.of(folder);
-            }
-            if (folder instanceof MultiFolder) {
-                Optional<Folder> found = findFolderNaming(((MultiFolder) folder).getFolders(), name);
-                if (found.isPresent()) {
-                    return found;
-                }
-            }
-        }
-        return Optional.empty();
+        return CompositeFolder.foldersChecker(folders, name, (folder, checkName) ->
+                folder.getName().equals(checkName) ? Optional.of(folder) : Optional.empty()
+        );
     }
 
     @Override
     public List<Folder> findFoldersBySize(String size) {
-        return findSizeFolders(folders, size);
-    }
-
-    private List<Folder> findSizeFolders(List<Folder> folders, String size){
-        List<Folder> showResult = new ArrayList<>();
-        for (Folder folder : folders) {
-            if (folder.getSize().equals(size)) {
-                showResult.add(folder);
-            }
-            if (folder instanceof MultiFolder) {
-                showResult.addAll(findSizeFolders(((MultiFolder) folder).getFolders(), size));
-            }
-        }
-        return showResult;
+        return CompositeFolder.foldersChecker(folders, size, (folder, checkSize) ->
+                folder.getSize().equals(checkSize) ? List.of(folder) : List.of()
+        );
     }
 
     @Override
     public int count() {
-        return countFolders(folders);
-    }
-
-    private int countFolders(List<Folder> folders){
-        int countFolders = folders.size();
-        try{
-            for(Folder folder : folders){
-                if(folder instanceof MultiFolder){
-                    countFolders += countFolders(((MultiFolder)folder).getFolders());
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return countFolders;
+        return CompositeFolder.foldersChecker(folders, null, (folder, unused) -> 1);
     }
 }
