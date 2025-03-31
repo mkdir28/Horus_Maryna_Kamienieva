@@ -2,14 +2,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface Cabinet {
-    // zwraca dowolny element o podanej nazwie
-    Optional<Folder>
-    findFolderByName(String name);
+    //returns any element with the specified name
+    Optional<Folder> findFolderByName(String name);
 
-    // zwraca wszystkie foldery podanego rozmiaru SMALL/MEDIUM/LARGE
+    // returns all folders of the given size SMALL/MEDIUM/LARGE
     List<Folder> findFoldersBySize(String size);
 
-    //zwraca liczbę wszystkich obiektów tworzących strukturę
+    //returns the number of all objects that make up the structure
     int count();
 
 }
