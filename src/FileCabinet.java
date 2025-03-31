@@ -4,7 +4,6 @@ import java.util.Optional;
 
 public class FileCabinet implements Cabinet{
     private List<Folder> folders;
-
     public FileCabinet(){folders = new ArrayList<Folder>();}
 
     @Override
